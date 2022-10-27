@@ -58,7 +58,7 @@ string jNumGen(){
  * Rather than clean the first array this one stores the results for the second hash attempt in a second array
  */
 void hashTestJNumbers() {
-    constexpr int ARRAYSIZE = 27000, TOTALIDS = 25000;
+    constexpr int TOTALIDS = 25000, ARRAYSIZE = 27000;
     int a[ARRAYSIZE] = {};
     int b[ARRAYSIZE] = {};
     int collisionTotal = 0;
