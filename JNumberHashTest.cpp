@@ -1,5 +1,7 @@
 /**
- *  TODO Header
+ *  This is a program that is designed to run some tests on hash functions, it can generate the CCP ID numbers in the
+ *  format "J12345678" and will run them though a hash function of choosing, counting up relevant stats and printing a
+ *  report at the end.
  */
 
 
@@ -11,8 +13,9 @@
 
 using namespace std;
 
-
-//Calculates a hash value for a string
+/*
+ * This is the original Basic Hash Function as given
+ */
 int hashFunction1(string key, int size) {
     int hash = 0;
     for(int i = 0; i < key.length(); i++) {
@@ -20,34 +23,24 @@ int hashFunction1(string key, int size) {
     }
     return hash % size;
 }
-// TODO Change to chopping off the J and hashing based on the cast int left behind
+
+/*
+ * My function is super simple, it takes the strin, and then rips of the J to make an INT!
+ * Hashing this value has a much higher amount for randomization
+ */
 int hashFunction2(string key, int size) {
-    long sum = 0;
-    long mul = 1;
-    for (int i = 1; i < key.length(); i++) {
-        mul = (i % 4 == 0) ? 1 : mul * 256;
-        sum += key[i] * mul;
-    }
-    return (int)(abs(sum) % size);
-}
-
-int hashFunction3(string key, int size) {
-    key.erase(0);
+    key.erase(key.begin()+0); // Mutates String to rip off the J
     int ID = stoi(key), hash;
-    int c = ;
-    for(int i = 0; i < key.length(); i++) {
-        hash = floor (size * (ID * c % 1));
-        }
+    hash = ID % size; // simple hash on values as INT
     return hash;
 }
 
-int hashFunction4(string key, int size) {
-    key.erase(0);
-    int ID = stoi(key), hash;
-    hash = ID % size;
-    return hash;
-}
 
+/*
+ * This will generate the J numbers to be sorted by the hash function! It has a few layers of random in there and
+ * takes advantage of a function to even out the distribution of numbers generated.
+ * (This helps the new hash function out dramatically)
+ */
 string jNumGen(){
     string jNum = "J";    // Init the String with the universal almighty all powerful starting J
     random_device seed;      // Init a single random device for a seed
@@ -59,74 +52,71 @@ string jNumGen(){
     return jNum + to_string(range(gen));
 }
 
-//Keys generated: 03, 13, 23 ... 183, 193
-//Array size: 10
-void hashTestJNumbers100_127() {
+
+/*
+ * This allows you to easily set the size and number of items to generate and simulate sorting on
+ * Rather than clean the first array this one stores the results for the second hash attempt in a second array
+ */
+void hashTestJNumbers() {
     constexpr int ARRAYSIZE = 27000, TOTALIDS = 25000;
     int a[ARRAYSIZE] = {};
+    int b[ARRAYSIZE] = {};
     int collisionTotal = 0;
     int successfulHashes = 0;
-    int bigBucket = 0;
-    int average = collisionTotal/ARRAYSIZE;
-    cout << "Testing Hash Function 1";
+    cout << "Testing Hash Function 1" << endl;
     for(int b = 0; b < TOTALIDS; b++){
        int h = hashFunction1(jNumGen(), ARRAYSIZE);
        a[h]++;
     }
+
+
+    // Can comment out below when testing larger sizes!!
     for(int b = 0; b < ARRAYSIZE; b++) { // Show index and number of hashes to its position
         cout << "index " << b << " count = " << a[b] << endl;
     }
-    for(int b = 0; b < ARRAYSIZE; b++) { // Show index and number of hashes to its position
+    // Can comment above out when testing larger sizes!!
+
+
+    for(int b = 0; b < ARRAYSIZE; b++) {
         if (a[b] > 1) {
-            collisionTotal += a[b];
+            collisionTotal += (a[b] - 1);
         } else if (a[b] == 1){
             successfulHashes++;
-        } else if (a[b] > bigBucket) {
-            bigBucket = a[b];
-        } else if (a[b] < average) {
-           // use average to tell if value is high if so start count of index
-           // store lowest index at start
-           // store the final index at the end
-           // subtract index at end of streak from beginning to get index length
-           // show length, start index, end index
         }
     }
     cout << "The total Collision count is: " << collisionTotal << endl;
     cout << "The total count of successful hashes was:  " << successfulHashes << endl;
-    cout << "The largest amount of hashes attempted to map at one index was: " << bigBucket << endl;
     cout << endl;
 
+    // Reset values
+    collisionTotal = 0;
+    successfulHashes = 0;
 
     cout << "Testing Hash Function 2" << endl;
-    for(int b = 0; b < TOTALIDS; b++){
+    for(int c = 0; c < TOTALIDS; c++){
         int h = hashFunction2(jNumGen(), ARRAYSIZE);
-        a[h]++;
+        b[h]++;
     }
-    for(int b = 0; b < ARRAYSIZE; b++) {
-        cout << "index " << b << " count = " << a[b] << endl;
+
+
+    // Can comment out below when testing larger sizes
+    for(int c = 0; c < ARRAYSIZE; c++) { // Show index and number of hashes to its position
+        cout << "index " << c << " count = " << b[c] << endl;
     }
-    for(int b = 0; b < ARRAYSIZE; b++) { // Show index and number of hashes to its position
-        if (a[b] > 1) {
-            collisionTotal += a[b];
-        } else if (a[b] == 1){
+    // Can comment above out when testing larger sizes
+
+
+    for(int c = 0; c < ARRAYSIZE; c++) {
+        if (b[c] > 1) {
+            collisionTotal += b[c];
+        } else if (b[c] == 1){
             successfulHashes++;
-        } else if (a[b] > bigBucket) {
-            bigBucket = a[b];
-        } else if (a[b] < average) {
-            // use average to tell if value is high if so start count of index
-            // store lowest index at start
-            // store the final index at the end
-            // subtract index at end of streak from beginning to get index length
-            // show length, start index, end index
         }
     }
     cout << "The total Collision count is: " << collisionTotal << endl;
     cout << "The total count of successful hashes was:  " << successfulHashes << endl;
-    cout << "The largest amount of hashes attempted to map at one index was: " << bigBucket << endl;
 }
 
 int main() {
-    hashTestJNumbers100_127();
-    cout << endl ;
-
+    hashTestJNumbers();
 }
