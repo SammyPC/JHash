@@ -71,9 +71,9 @@ void hashTestJNumbers() {
 
 
     // Can comment out below when testing larger sizes!!
-    for(int b = 0; b < ARRAYSIZE; b++) { // Show index and number of hashes to its position
-        cout << "index " << b << " count = " << a[b] << endl;
-    }
+//    for(int b = 0; b < ARRAYSIZE; b++) { // Show index and number of hashes to its position
+//        cout << "index " << b << " count = " << a[b] << endl;
+//    }
     // Can comment above out when testing larger sizes!!
 
 
@@ -100,9 +100,9 @@ void hashTestJNumbers() {
 
 
     // Can comment out below when testing larger sizes
-    for(int c = 0; c < ARRAYSIZE; c++) { // Show index and number of hashes to its position
-        cout << "index " << c << " count = " << b[c] << endl;
-    }
+//    for(int c = 0; c < ARRAYSIZE; c++) { // Show index and number of hashes to its position
+//        cout << "index " << c << " count = " << b[c] << endl;
+//    }
     // Can comment above out when testing larger sizes
 
 
